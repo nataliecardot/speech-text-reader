@@ -4,6 +4,7 @@ const textarea = document.getElementById('text');
 const readBtn = document.getElementById('read');
 const toggleBtn = document.getElementById('toggle');
 const closeBtn = document.getElementById('close');
+const textBox = document.getElementById('text-box');
 
 const data = [
   {
@@ -117,15 +118,31 @@ function speakText() {
 // Voices changed
 speechSynthesis.addEventListener('voiceschanged', getVoices);
 
+function removeTextBoxExitListener() {
+  document.removeEventListener('click', timeoutFn);
+}
+
+function timeoutFn(e) {
+  if (
+    textBox.classList.contains('show') &&
+    !e.target.matches('text-box') &&
+    !textBox.contains(e.target)
+  ) {
+    textBox.classList.remove('show');
+    removeTextBoxExitListener();
+  }
+}
+
 // Toggle text box
-toggleBtn.addEventListener('click', () =>
-  document.getElementById('text-box').classList.toggle('show')
-);
+toggleBtn.addEventListener('click', () => {
+  textBox.classList.toggle('show');
+
+  // Need the timeout so the transform for .text-box.show in CSS has time to take effect (per time, 1s, in transition property set in .text-box ruleset)
+  setTimeout(() => document.addEventListener('click', timeoutFn), 1000);
+});
 
 // Close btn (can close text box by clicking toggle text box or clicking close button)
-closeBtn.addEventListener('click', () =>
-  document.getElementById('text-box').classList.remove('show')
-);
+closeBtn.addEventListener('click', () => textBox.classList.remove('show'));
 
 // Not needed in Chrome because voiceschanged event fires on page load, calling getVoices due to event listener (voiceschanged fires because the list of voices changes when Chrome finishes making an API call to get the list of voices available only to Chrome users). See https://stackoverflow.com/questions/65688030/why-is-the-voiceschanged-event-fired-on-page-load?noredirect=1#comment116140455_65688030
 // getVoices();
