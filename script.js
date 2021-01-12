@@ -75,6 +75,26 @@ function createBox(item) {
   main.appendChild(box);
 }
 
+// Store voices
+let voices = [];
+
+function getVoices() {
+  voices = speechSynthesis.getVoices();
+
+  // Create an option for each voice in array
+  voices.forEach((voice) => {
+    const option = document.createElement('option');
+
+    option.value = voice.name;
+    option.innerText = `${voice.name} ${voice.lang}`;
+
+    voicesSelect.appendChild(option);
+  });
+}
+
+// Voices changed
+speechSynthesis.addEventListener('voiceschanged', getVoices);
+
 // Toggle text box
 toggleBtn.addEventListener('click', () =>
   document.getElementById('text-box').classList.toggle('show')
@@ -84,3 +104,6 @@ toggleBtn.addEventListener('click', () =>
 closeBtn.addEventListener('click', () =>
   document.getElementById('text-box').classList.remove('show')
 );
+
+// Not needed in Chrome because voiceschanged event fires on page load, calling getVoices due to event listener (voiceschanged fires because the list of voices changes when Chrome finishes making an API call to get the list of voices available only to Chrome users). See https://stackoverflow.com/questions/65688030/why-is-the-voiceschanged-event-fired-on-page-load?noredirect=1#comment116140455_65688030
+// getVoices();
