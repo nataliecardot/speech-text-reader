@@ -74,3 +74,13 @@ function createBox(item) {
 
   main.appendChild(box);
 }
+
+// Toggle text box
+toggleBtn.addEventListener('click', () =>
+  document.getElementById('text-box').classList.toggle('show')
+);
+
+// Close btn (can close text box by clicking toggle text box or clicking close button)
+closeBtn.addEventListener('click', () =>
+  document.getElementById('text-box').classList.remove('show')
+);
