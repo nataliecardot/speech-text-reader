@@ -98,7 +98,7 @@ function getVoices() {
     const option = document.createElement('option');
 
     option.value = voice.name;
-    option.innerText = `${voice.name} ${voice.lang}`;
+    option.innerText = `${voice.name} (${voice.lang})`;
 
     voicesSelect.appendChild(option);
   });
@@ -115,8 +115,10 @@ function speakText() {
   speechSynthesis.speak(message);
 }
 
-// Voices changed
-speechSynthesis.addEventListener('voiceschanged', getVoices);
+// Set voice
+function setVoice(e) {
+  message.voice = voices.find((voice) => voice.name === e.target.value);
+}
 
 function removeTextBoxExitListener() {
   document.removeEventListener('click', timeoutFn);
@@ -133,6 +135,9 @@ function timeoutFn(e) {
   }
 }
 
+// Voices changed
+speechSynthesis.addEventListener('voiceschanged', getVoices);
+
 // Toggle text box
 toggleBtn.addEventListener('click', () => {
   textBox.classList.toggle('show');
@@ -143,6 +148,9 @@ toggleBtn.addEventListener('click', () => {
 
 // Close btn (can close text box by clicking toggle text box or clicking close button)
 closeBtn.addEventListener('click', () => textBox.classList.remove('show'));
+
+// Change voice
+voicesSelect.addEventListener('change', setVoice);
 
 // Not needed in Chrome because voiceschanged event fires on page load, calling getVoices due to event listener (voiceschanged fires because the list of voices changes when Chrome finishes making an API call to get the list of voices available only to Chrome users). See https://stackoverflow.com/questions/65688030/why-is-the-voiceschanged-event-fired-on-page-load?noredirect=1#comment116140455_65688030
 // getVoices();
