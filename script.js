@@ -157,5 +157,11 @@ closeBtn.addEventListener('click', () => {
 // Change voice
 voicesSelect.addEventListener('change', setVoice);
 
+// Read text button
+readBtn.addEventListener('click', () => {
+  setTextMessage(textarea.value);
+  speakText();
+});
+
 // Not needed in Chrome because voiceschanged event fires on page load, calling getVoices due to event listener (voiceschanged fires because the list of voices changes when Chrome finishes making an API call to get the list of voices available only to Chrome users). See https://stackoverflow.com/questions/65688030/why-is-the-voiceschanged-event-fired-on-page-load?noredirect=1#comment116140455_65688030
 // getVoices();
