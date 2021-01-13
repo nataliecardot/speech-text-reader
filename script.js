@@ -127,8 +127,9 @@ function removeTextBoxExitListener() {
 function timeoutFn(e) {
   if (
     textBox.classList.contains('show') &&
-    !e.target.matches('text-box') &&
-    !textBox.contains(e.target)
+    e.target !== textBox &&
+    !textBox.contains(e.target) &&
+    e.target !== toggleBtn
   ) {
     textBox.classList.remove('show');
     removeTextBoxExitListener();
@@ -142,12 +143,16 @@ speechSynthesis.addEventListener('voiceschanged', getVoices);
 toggleBtn.addEventListener('click', () => {
   textBox.classList.toggle('show');
 
-  // Need the timeout so the transform for .text-box.show in CSS has time to take effect (per time, 1s, in transition property set in .text-box ruleset)
-  setTimeout(() => document.addEventListener('click', timeoutFn), 1000);
+  if (textBox.classList.contains('show')) {
+    // Need the timeout so the transform for .text-box.show in CSS has time to take effect (per time, 1s, in transition property set in .text-box ruleset)
+    setTimeout(() => document.addEventListener('click', timeoutFn), 1000);
+  }
 });
 
 // Close btn (can close text box by clicking toggle text box or clicking close button)
-closeBtn.addEventListener('click', () => textBox.classList.remove('show'));
+closeBtn.addEventListener('click', () => {
+  textBox.classList.remove('show');
+});
 
 // Change voice
 voicesSelect.addEventListener('change', setVoice);
